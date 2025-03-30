@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ふらっと。【リラクゼーション】</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap');
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background-color: #f9f5f0;
+            color: #333;
+        }
+        .japanese-pattern {
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiB2aWV3Qm94PSIwIDAgMTAwIDEwMCI+PHBhdGggZmlsbD0iI2U4ZTRlMSIgZD0iTTAgMGgxMDB2MTAwSDB6Ii8+PHBhdGggZmlsbD0iI2Q5Y2ZjYiIgZD0iTTAgMGg1MHY1MEgwek01MCA1MGg1MHY1MEg1MHpNMCA1MGg1MHY1MEgwek01MCAwaDUwdjUwSDUweiIvPjwvc3ZnPg==');
+        }
+        .hero-image {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('https://images.unsplash.com/photo-1544161515-4ab6ce6db874?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+        }
+        .treatment-card {
+            transition: transform 0.3s ease;
+        }
+        .treatment-card:hover {
+            transform: translateY(-5px);
+        }
+        .map-container {
+            height: 400px;
+            width: 100%;
+        }
+        .phone-button {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 50;
+        }
+        .feature-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 12px;
+        }
+        .feature-item {
+            position: relative;
+            padding-left: 24px;
+        }
+        .feature-item:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #e53e3e;
+            font-weight: bold;
+        }
+        .price-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .price-table th, .price-table td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .price-table th {
+            font-weight: bold;
+            background-color: #f7fafc;
+        }
+        /* モーダルスタイル */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+        }
+        .modal-content {
+            background-color: white;
+            margin: 10% auto;
+            padding: 20px;
+            border-radius: 8px;
+            width: 300px;
+            text-align: center;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close:hover {
+            color: black;
+        }
+    </style>
+</head>
+<body>
+    <!-- ヘッダー -->
+    <header class="japanese-pattern shadow-md">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center">
+                <i class="fas fa-spa text-2xl text-red-600 mr-2"></i>
+                <h1 class="text-2xl font-bold text-gray-800">ふらっと。【リラクゼーション】</h1>
+            </div>
+            <nav>
+                <ul class="flex space-x-6">
+                    <li><a href="#home" class="text-gray-700 hover:text-red-600 transition">ホーム</a></li>
+                    <li><a href="#services" class="text-gray-700 hover:text-red-600 transition">サービス</a></li>
+                    <li><a href="#about" class="text-gray-700 hover:text-red-600 transition">当店について</a></li>
+                    <li><a href="#location" class="text-gray-700 hover:text-red-600 transition">アクセス</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- ヒーローセクション -->
+    <section id="home" class="hero-image text-white py-32 relative">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-4xl md:text-5xl font-bold mb-6">心と体のリラクゼーション空間</h2>
+            <p class="text-xl mb-8 max-w-2xl mx-auto">ふらっと立ち寄れる、あなたのための癒しの場所</p>
+            <div class="flex justify-center space-x-4">
+                <a href="https://beauty.hotpepper.jp/kr/slnH000744052/coupon/" 
+                   class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-full transition duration-300 inline-block">
+                   ホットペッパーで予約
+                </a>
+                <a href="tel:070-9096-5722" 
+                   class="bg-white hover:bg-gray-100 text-red-600 font-bold py-3 px-6 rounded-full transition duration-300 inline-block">
+                   <i class="fas fa-phone mr-2"></i>070-9096-5722
+                </a>
+                <button onclick="openLineModal()" 
+                   class="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-full transition duration-300 inline-flex items-center">
+                   <i class="fab fa-line mr-2"></i>LINEで問い合わせ
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- サービス紹介 -->
+    <section id="services" class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12 text-gray-800">サービスメニュー</h2>
+            
+            <div class="max-w-3xl mx-auto">
+                <div class="treatment-card bg-white rounded-lg shadow-lg overflow-hidden">
+                    <img src="03.jpg" alt="サロン内観" class="w-full h-64 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-4 text-gray-800">カスタムリラクゼーションコース</h3>
+                        <p class="text-gray-600 mb-6">
+                            施術は、もみほぐし・オイル・ストレッチ・足裏・ヘッドのうちから組み合わせて選べます♪<br>
+                            オイルの場合は施術前後に拭き取り有♪無料のパジャマあり♪
+                        </p>
+                        
+                        <div class="bg-gray-50 p-4 rounded-lg mb-6">
+                            <h4 class="font-bold text-lg mb-3 text-red-600">料金表</h4>
+                            <table class="price-table">
+                                <thead>
+                                    <tr>
+                                        <th class="text-left py-2">時間</th>
+                                        <th class="text-right py-2">現金払い</th>
+                                        <th class="text-right py-2">カード/PayPay/d払い</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="py-2">60分</td>
+                                        <td class="text-right py-2">¥2,800</td>
+                                        <td class="text-right py-2">¥2,900</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="py-2">90分</td>
+                                        <td class="text-right py-2">¥4,200</td>
+                                        <td class="text-right py-2">¥4,400</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="py-2">120分</td>
+                                        <td class="text-right py-2">¥5,600</td>
+                                        <td class="text-right py-2">¥5,800</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="py-2">150分</td>
+                                        <td class="text-right py-2">¥7,000</td>
+                                        <td class="text-right py-2">¥7,300</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="py-2">180分</td>
+                                        <td class="text-right py-2">¥8,400</td>
+                                        <td class="text-right py-2">¥8,700</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <p class="text-xs text-gray-500 mt-2">※現金払い価格は現金払いのお客様限定</p>
+                        </div>
+                        
+                        <div class="text-center">
+                            <a href="https://beauty.hotpepper.jp/kr/slnH000744052/coupon/" 
+                               class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-6 rounded-full transition duration-300 inline-block">
+                               ホットペッパーで予約
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 当店について -->
+    <section id="about" class="py-16 bg-gray-100">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row items-center">
+                <div class="md:w-1/2 mb-8 md:mb-0 md:pr-8">
+                    <img src="03.jpg" alt="サロン内観" class="rounded-lg shadow-lg w-full">
+                </div>
+                <div class="md:w-1/2">
+                    <h2 class="text-3xl font-bold mb-6 text-gray-800">当店について</h2>
+                    <p class="text-gray-700 mb-4">ふらっと。【リラクゼーション】は、忙しい日常からふらっと立ち寄れる癒しの空間を提供しています。</p>
+                    
+                    <div class="bg-white p-6 rounded-lg shadow-sm mb-6">
+                        <h3 class="text-xl font-bold mb-4 text-gray-800">こだわり条件</h3>
+                        <div class="feature-list">
+                            <div class="feature-item">夜20時以降も受付OK</div>
+                            <div class="feature-item">当日受付OK</div>
+                            <div class="feature-item">個室あり</div>
+                            <div class="feature-item">駅から徒歩5分以内</div>
+                            <div class="feature-item">女性スタッフ在籍</div>
+                            <div class="feature-item">完全予約制</div>
+                            <div class="feature-item">指名予約OK</div>
+                            <div class="feature-item">1人で貸切OK</div>
+                            <div class="feature-item">ドリンクサービスあり</div>
+                            <div class="feature-item">着替えあり</div>
+                            <div class="feature-item">3席（ベッド）以下の小型サロン</div>
+                            <div class="feature-item">都度払いメニューあり</div>
+                            <div class="feature-item">体験メニューあり</div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex flex-wrap justify-center gap-4">
+                        <a href="https://beauty.hotpepper.jp/kr/slnH000744052/coupon/" 
+                           class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full transition duration-300 inline-flex items-center">
+                           ホットペッパー予約
+                        </a>
+                        <a href="tel:070-9096-5722" 
+                           class="bg-white hover:bg-gray-100 border border-red-600 text-red-600 font-bold py-2 px-4 rounded-full transition duration-300 inline-flex items-center">
+                           <i class="fas fa-phone mr-1"></i>070-9096-5722
+                        </a>
+                        <a href="https://x.com/therapist_ruruu?ref_src=twsrc%5Etfw%7Ctwcamp%5Eembeddedtimeline%7Ctwterm%5Escreen-name%3Atherapist_ruruu%7Ctwcon%5Es1" 
+                           class="bg-blue-400 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded-full transition duration-300 inline-flex items-center"
+                           target="_blank">
+                           <i class="fab fa-twitter mr-1"></i>Twitter
+                        </a>
+                        <button onclick="openLineModal()" 
+                           class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-full transition duration-300 inline-flex items-center">
+                           <i class="fab fa-line mr-1"></i>LINE
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- アクセス・地図 -->
+    <section id="location" class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12 text-gray-800">アクセス</h2>
+            
+            <div class="flex flex-col md:flex-row">
+                <div class="md:w-1/2 mb-8 md:mb-0 md:pr-8">
+                    <div class="bg-gray-100 p-6 rounded-lg">
+                        <h3 class="text-xl font-bold mb-4 text-gray-800">店舗情報</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <h4 class="font-bold text-gray-700">住所</h4>
+                                <p class="text-gray-600">東京都豊島区南池袋1-28-1 池袋パークビル5F</p>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-700">電話番号</h4>
+                                <p class="text-gray-600">070-9096-5722</p>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-700">営業時間</h4>
+                                <p class="text-gray-600">10:00～24:00（最終受付23:00）</p>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-700">定休日</h4>
+                                <p class="text-gray-600">不定休</p>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-700">最寄駅</h4>
+                                <p class="text-gray-600">JR池袋駅 東口より徒歩3分</p>
+                            </div>
+                        </div>
+                        <div class="mt-6 flex justify-center space-x-4">
+                            <a href="https://beauty.hotpepper.jp/kr/slnH000744052/coupon/" 
+                               class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full transition duration-300 inline-block">
+                               ホットペッパー予約
+                            </a>
+                            <button onclick="openLineModal()" 
+                               class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-full transition duration-300 inline-flex items-center">
+                               <i class="fab fa-line mr-1"></i>LINE
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="md:w-1/2">
+                    <div class="map-container rounded-lg shadow-lg overflow-hidden">
+                        <!-- 修正したGoogleマップ埋め込みコード -->
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3239.432729985352!2d139.7068223152612!3d35.73275978018488!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x60188d5d4043e0dd%3A0x5a1c3a1a1a1a1a1a!2z5pel5pys44CB44CSMTcxLTAwMjEg5p2x5Lqs6YO95Y2D5bO25Yy65rKz5Y-w77yV5LiB55uu77yR77yS4oiS77yR!5e0!3m2!1sja!2sjp!4v1620000000000!5m2!1sja!2sjp" 
+                                width="100%" 
+                                height="100%" 
+                                style="border:0;" 
+                                allowfullscreen="" 
+                                loading="lazy"
+                                referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- フッター -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <div class="flex items-center">
+                        <i class="fas fa-spa text-2xl text-red-400 mr-2"></i>
+                        <h2 class="text-xl font-bold">ふらっと。【リラクゼーション】</h2>
+                    </div>
+                    <p class="text-gray-400 mt-2">東京都豊島区のリラクゼーションサロン</p>
+                </div>
+                
+                <div class="flex flex-col items-center md:items-end">
+                    <a href="tel:070-9096-5722" class="text-2xl font-bold mb-2 hover:text-red-400 transition">
+                        <i class="fas fa-phone mr-2"></i>070-9096-5722
+                    </a>
+                    <div class="flex space-x-4">
+                        <a href="https://beauty.hotpepper.jp/kr/slnH000744052/coupon/" 
+                           class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full transition duration-300 inline-block">
+                           ホットペッパー予約
+                        </a>
+                        <button onclick="openLineModal()" 
+                           class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-full transition duration-300 inline-flex items-center">
+                           <i class="fab fa-line mr-1"></i>LINE
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-700 mt-6 pt-6 text-center text-gray-400">
+                <p>© 2023 ふらっと。【リラクゼーション】 All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 固定電話ボタン -->
+    <a href="tel:070-9096-5722" class="phone-button bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-full shadow-lg transition duration-300 flex items-center">
+        <i class="fas fa-phone mr-2"></i>070-9096-5722
+    </a>
+
+    <!-- LINEモーダル -->
+    <div id="lineModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeLineModal()">&times;</span>
+            <h3 class="text-xl font-bold mb-4">LINEでお問い合わせ</h3>
+            <img src="下载.png" alt="LINE QRコード" class="w-full mb-4">
+            <p class="text-sm text-gray-600">QRコードを読み取って友達追加</p>
+        </div>
+    </div>
+
+    <script>
+        // LINEモーダル制御
+        function openLineModal() {
+            document.getElementById('lineModal').style.display = 'block';
+        }
+        function closeLineModal() {
+            document.getElementById('lineModal').style.display = 'none';
+        }
+        
+        // モーダル外をクリックで閉じる
+        window.onclick = function(event) {
+            const modal = document.getElementById('lineModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+        
+        // マップの読み込みエラー対策
+        document.addEventListener('DOMContentLoaded', function() {
+            const iframe = document.querySelector('.map-container iframe');
+            iframe.onload = function() {
+                console.log('マップの読み込み完了');
+            };
+            iframe.onerror = function() {
+                console.log('マップの読み込みに失敗しました');
+                iframe.src = iframe.src; // リトライ
+            };
+        });
+    </script>
+</body>
+</html>
